@@ -25,29 +25,40 @@
 html, body {
   width: 100%;
   height: 100%;
+  height: 100dvh;
   overflow: hidden;
   background: var(--bg);
   color: var(--text);
   font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic UI", "Segoe UI", sans-serif;
   user-select: none;
   -webkit-user-select: none;
-  touch-action: none;
+  touch-action: pan-y;
 }
 
 #app, .screen {
   position: fixed;
   inset: 0;
+  min-width: 0;
+  min-height: 0;
+}
+
+#game-screen {
+  overflow: hidden;
+  touch-action: none;
 }
 
 .hidden { display: none !important; }
 
 #title-screen {
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
-  padding: calc(28px + var(--safe-t)) 18px calc(28px + var(--safe-b));
+  padding: calc(20px + var(--safe-t)) 14px calc(20px + var(--safe-b));
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   gap: 16px;
 }
 
@@ -62,7 +73,11 @@ html, body {
 
 .title-hero, .title-panel, .btn-start {
   position: relative;
-  width: min(720px, 100%);
+  width: 100%;
+  max-width: 720px;
+  min-width: 0;
+  margin-inline: auto;
+  box-sizing: border-box;
 }
 
 .title-hero { text-align: center; padding-top: 12px; }
@@ -102,12 +117,14 @@ html, body {
   color: var(--muted);
   margin-bottom: 10px;
   font-weight: 600;
+  overflow-wrap: anywhere;
 }
 
 .panel-label span {
   color: #7d7a72;
   font-weight: 400;
   margin-left: 8px;
+  display: inline;
 }
 
 .best-panel { text-align: center; }
@@ -121,7 +138,7 @@ html, body {
 
 .control-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
 }
 
@@ -144,6 +161,8 @@ button, input {
   line-height: 1.4;
   cursor: pointer;
   min-height: 60px;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .ctrl-btn small {
@@ -163,6 +182,7 @@ button, input {
   color: var(--muted);
   font-size: 13px;
   line-height: 1.75;
+  overflow-wrap: anywhere;
 }
 
 .btn-start, .btn-secondary, .btn-danger {
@@ -217,6 +237,7 @@ button, input {
   position: absolute;
   top: calc(10px + var(--safe-t));
   left: calc(12px + var(--safe-l));
+  right: calc(88px + var(--safe-r));
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -244,9 +265,10 @@ button, input {
 
 .next-upgrade {
   position: absolute;
-  top: calc(10px + var(--safe-t));
+  top: calc(52px + var(--safe-t));
   left: 50%;
   transform: translateX(-50%);
+  max-width: calc(100% - 24px);
   background: rgba(28, 29, 27, 0.78);
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -254,6 +276,7 @@ button, input {
   font-size: 12px;
   color: var(--text);
   pointer-events: none;
+  white-space: nowrap;
 }
 
 .btn-ghost {
@@ -271,10 +294,11 @@ button, input {
 
 #vpad {
   position: absolute;
-  left: calc(18px + var(--safe-l));
+  left: 50%;
   bottom: calc(24px + var(--safe-b));
   width: 138px;
   height: 138px;
+  transform: translateX(-50%);
 }
 
 #vpad-base {
@@ -302,22 +326,28 @@ button, input {
   inset: 0;
   background: rgba(18, 18, 16, 0.58);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: calc(16px + var(--safe-t)) 12px calc(16px + var(--safe-b));
+  padding: max(12px, var(--safe-t)) 12px max(12px, var(--safe-b));
   z-index: 20;
   overflow: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
   cursor: default;
 }
 
 .modal-card {
   width: min(1100px, 100%);
+  max-width: 100%;
+  min-width: 0;
+  margin: auto;
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 16px;
-  padding: 20px;
+  padding: 16px;
   box-shadow: var(--shadow);
+  box-sizing: border-box;
 }
 
 .modal-kicker {
@@ -329,8 +359,7 @@ button, input {
 .modal-note { color: var(--muted); font-size: 13px; margin-bottom: 14px; line-height: 1.6; }
 
 .pause-card {
-  max-height: calc(100vh - 40px);
-  overflow: auto;
+  max-height: none;
 }
 
 .pause-h {
@@ -421,7 +450,7 @@ button, input {
   text-align: left;
   color: var(--text);
   cursor: pointer;
-  min-height: 168px;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -475,4 +504,17 @@ button, input {
   color: var(--muted);
   margin-bottom: 8px;
   text-align: center;
+}
+
+@media (min-width: 560px) {
+  .next-upgrade {
+    top: calc(10px + var(--safe-t));
+  }
+}
+
+@media (max-width: 420px) {
+  .title-logo { font-size: 40px; }
+  .best-score { font-size: 32px; }
+  .ctrl-btn { min-height: 52px; font-size: 12px; padding: 8px 6px; }
+  .modal-card h2 { font-size: 20px; }
 }
