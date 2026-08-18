@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#1c1d1b" />
+  <title>残数</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <section id="title-screen" class="screen">
+      <div class="title-bg" aria-hidden="true"></div>
+      <header class="title-hero">
+        <p class="title-kicker">生き残り</p>
+        <h1 class="title-logo">残数</h1>
+        <p class="title-sub">動けるのは自分だけです。敵は時間とともに強くなります。</p>
+      </header>
+
+      <div class="title-panel best-panel">
+        <div class="best-label">自己ベスト</div>
+        <div id="best-score" class="best-score">0</div>
+        <div id="best-meta" class="best-meta">まだ記録はありません</div>
+      </div>
+
+      <div class="title-panel">
+        <div class="panel-label">操作 <span>1つだけ使います。あとから変更できます</span></div>
+        <div id="control-grid" class="control-grid"></div>
+      </div>
+
+      <div class="title-panel">
+        <div class="panel-label">遊び方</div>
+        <p class="hint">時間に限りはありません。敵は少しずつ強く、多くなります。約10秒ごとに強化を1つ選びます。同じ強化は何度でも重ねられます。攻撃の火力は初めて得たとき1で、重ねるたびに1増えます。得点は、生き残った秒数の2乗×5です。自分は青緑の四角、敵は赤みの図形です。敵の数字は体力、自分の数字は残数です。攻撃は自動です。</p>
+      </div>
+
+      <button id="btn-start" type="button" class="btn-start">はじめる</button>
+    </section>
+
+    <section id="game-screen" class="screen hidden">
+      <canvas id="game-canvas"></canvas>
+      <div id="hud">
+        <div class="hud-block">
+          <span class="hud-k">時間</span>
+          <span id="hud-time">00:00</span>
+        </div>
+        <div class="hud-block">
+          <span class="hud-k">得点</span>
+          <span id="hud-score">0</span>
+        </div>
+        <div class="hud-block">
+          <span class="hud-k">撃破</span>
+          <span id="hud-kills">0</span>
+        </div>
+      </div>
+      <div id="next-upgrade" class="next-upgrade">つぎの強化 10.0</div>
+      <button id="btn-controls" type="button" class="btn-ghost">メニュー</button>
+      <div id="vpad" class="hidden">
+        <div id="vpad-base">
+          <div id="vpad-knob"></div>
+        </div>
+      </div>
+    </section>
+
+    <div id="upgrade-modal" class="modal hidden">
+      <div class="modal-card upgrade-card-wrap">
+        <p class="modal-kicker">強化</p>
+        <h2>1つ選んでください</h2>
+        <p class="modal-note">5つのなかから、今ほしいものを選びます。</p>
+        <div id="upgrade-cards" class="upgrade-cards"></div>
+      </div>
+    </div>
+
+    <div id="control-modal" class="modal hidden">
+      <div class="modal-card pause-card">
+        <p class="modal-kicker">一時停止　Escでも開けます</p>
+        <h2>メニュー</h2>
+        <p class="modal-note">操作の変更と、いま持っている強化を確認できます。</p>
+
+        <h3 class="pause-h">操作</h3>
+        <div id="control-grid-pause" class="control-grid"></div>
+
+        <h3 class="pause-h">いまの能力</h3>
+        <div id="core-stats" class="stat-chips"></div>
+
+        <h3 class="pause-h">持っている強化</h3>
+        <div id="owned-upgrades" class="owned-list"></div>
+
+        <div class="pause-actions">
+          <button id="btn-control-close" type="button" class="btn-secondary">戻る</button>
+          <button id="btn-giveup" type="button" class="btn-danger">あきらめる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="result-modal" class="modal hidden">
+      <div class="modal-card result-card">
+        <p id="result-kicker" class="modal-kicker">結果</p>
+        <h2 id="result-title">残数がなくなりました</h2>
+        <div class="result-grid">
+          <div><span>生存時間</span><strong id="result-time">00:00</strong></div>
+          <div><span>撃破</span><strong id="result-kills">0</strong></div>
+          <div class="result-score"><span>得点</span><strong id="result-score">0</strong></div>
+        </div>
+        <p id="result-best" class="result-best"></p>
+        <button id="btn-title" type="button" class="btn-start">タイトルへ</button>
+      </div>
+    </div>
+  </div>
+  <script src="game.js"></script>
+</body>
+</html>
